@@ -12,10 +12,11 @@ GAME_OVER = 'gameOver'
 WINNER = 'winner'
 START = 'start'
 DEFINITION = 'definition'
+CHALLENGE = 'challenge'
 # ======================================= #
 
 app = Flask(__name__)
-socketio = SocketIO(app)
+socketio = SocketIO(app, cors_allowed_origins='*')
 room_map = {}
 room_targets = {}
 
@@ -50,7 +51,7 @@ def start(data):
 
     target = get_random_def()
     room_targets[room_name] = target
-    emit(target, {DEFINITION: target}, room=room_name)
+    emit(CHALLENGE, {DEFINITION: target}, room=room_name)
 
 
 @socketio.on(JOIN)
