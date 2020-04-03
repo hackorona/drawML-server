@@ -10,6 +10,8 @@ USERNAME = 'username'
 IMAGE_MATRIX = 'matrix'
 GAME_OVER = 'gameOver'
 WINNER = 'winner'
+START = 'start'
+DEFINITION = 'definition'
 # ======================================= #
 
 app = Flask(__name__)
@@ -28,6 +30,20 @@ def find_room(user_name):
 
 def get_random_def():
     return ml_module.get_random_def()  # todo import
+
+
+@socketio.on(START)
+def start(data):
+    """Send a starting definition to a specific room"""
+    try:
+        room_name = data[ROOM_ID]  # Get client room id
+    except KeyError:
+        print("bad request format")
+        return '-1'
+
+    target = get_random_def()
+    emit(target, {DEFINITION: target}, room=room_name)
+
 
 @socketio.on(JOIN)
 def client_join(data):
@@ -55,7 +71,7 @@ def identify_image(data):
         print("bad request format")
         return '-1'
 
-    answer = ml_module.predict(matrix)
+    answer = ml_module.predict(matrix)  # todo import
     if answer:  # Announce game over
         room_name = find_room(user_name=user_name)
         if room_name is None:
@@ -65,12 +81,9 @@ def identify_image(data):
         emit(GAME_OVER, data, room=room_name)
 
 
-
-
 @socketio.on('connect')
-def connected():
+def connect():
     print("client connected to socket")
-
 
 
 if __name__ == '__main__':
