@@ -17,8 +17,9 @@ DEFINITION = 'definition'
 app = Flask(__name__)
 socketio = SocketIO(app)
 room_map = {}
+room_targets = {}
 
-ml_module = '' # todo import ML module
+ml_module = ''  # todo import ML module
 
 
 def find_room(user_name):
@@ -29,7 +30,13 @@ def find_room(user_name):
 
 
 def get_random_def():
-    return ml_module.get_random_def()  # todo import
+    return "Dummy def"
+    # return ml_module.get_random_def()  # todo import
+
+
+@socketio.on('connect')
+def connect():
+    print("client connected to socket")
 
 
 @socketio.on(START)
@@ -42,11 +49,13 @@ def start(data):
         return '-1'
 
     target = get_random_def()
+    room_targets[room_name] = target
     emit(target, {DEFINITION: target}, room=room_name)
 
 
 @socketio.on(JOIN)
 def client_join(data):
+    """Add new client to its room"""
     session_id = request.sid
     try:
         room_name = data[ROOM_ID]  # Get client room id
@@ -61,6 +70,12 @@ def client_join(data):
     print(session_id + ' has entered the room ' + str(room_name))
 
 
+def check_answer(answer, room):
+    target = room_targets[room]
+    # Todo check if answer is close enough to target
+    pass
+
+
 @socketio.on(IDENTIFY)
 def identify_image(data):
     """identify user image"""
@@ -71,19 +86,18 @@ def identify_image(data):
         print("bad request format")
         return '-1'
 
-    answer = ml_module.predict(matrix)  # todo import
-    if answer:  # Announce game over
-        room_name = find_room(user_name=user_name)
-        if room_name is None:
-            print("bad username")
-            return '-1'
+    over = False
+    room_name = find_room(user_name=user_name)
+    if room_name is None:
+        print("bad username")
+        return '-1'
+
+    # answer = ml_module.predict(matrix)  # todo import
+    # over = check_answer(answer, room_name)  # Todo implement
+
+    if over:  # Announce game over
         data = {WINNER: user_name}
         emit(GAME_OVER, data, room=room_name)
-
-
-@socketio.on('connect')
-def connect():
-    print("client connected to socket")
 
 
 if __name__ == '__main__':
