@@ -1,47 +1,53 @@
 from flask import Flask, request, session
 from flask_socketio import SocketIO
 from flask_socketio import join_room, leave_room
+# ========= Project Constants =========== #
+
+ROOM_ID = 'roomId'
+JOIN = 'join'
+IDENTIFY = 'identify'
+USERNAME = 'username'
+IMAGE_MATRIX = 'matrix'
+# ======================================= #
 
 app = Flask(__name__)
 socketio = SocketIO(app)
+room_map = {}
+
+@socketio.on(JOIN)
+def client_join(data):
+    session_id = request.sid
+    try:
+        room_name = data[ROOM_ID]  # Get client room id
+    except KeyError:
+        print("bad request format")
+        return '-1'
+    join_room(room=room_name, sid=session_id)  # Add client to its room
+
+    if session_id not in room_map:
+        room_map[session_id] = []
+    room_map[session_id].append(session_id)  # Save in room map
+    print(session_id + ' has entered the room ' + str(room_name))
+
+socketio.on(IDENTIFY)
+def identify_image(data):
+    try:
+        matrix = data[IMAGE_MATRIX]
+        user_name = data[USERNAME]
+    except KeyError:
+        print("bad request format")
+        return '-1'
+
+    
 
 
-
-# @socketio.on('join')
-# def on_join(data):
-#     username = data['username']
-#     room = data['room']
-#     join_room(room)
-#     send(username + ' has entered the room.', room=room)
-#
-# @socketio.on('leave')
-# def on_leave(data):
-#     username = data['username']
-#     room = data['room']
-#     leave_room(room)
-#     send(username + ' has left the room.', room=room)
-
-@app.route('/hi')  # API route
-def main():
-    return 'hi'
 
 @socketio.on('connect')
 def connected():
     print("client connected to socket")
 
-@socketio.on('new_client')
-def handel_event():
-    session_id = request.sid
-    # Save the session id to emit to this client in the future
 
-    room = session.get('room')
-    join_room(room)
-    socketio.emit('status',  {'msg': session.get('name') + ' has entered the room.'}, room=session_id)
-    print("new client")
-
-def update_clients():
-    msg = 'new data'
-    socketio.emit(msg)
 
 if __name__ == '__main__':
+    room_map = {}  # Initialize
     socketio.run(app)
