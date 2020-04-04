@@ -80,6 +80,10 @@ def test_prediction(rec_obj):
 
 
 def get_default_model():
+    return get_20_10000()
+
+
+def get_20_10000():
     cur_dir_path = pathlib.Path().absolute()
     model_rel_path = "models/20/10000/model.h5"
     labels_rel_path = "models/20/10000/labels.csv"
