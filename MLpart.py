@@ -55,8 +55,8 @@ def top_3_acc(y_true, y_pred):
     return metrics.top_k_categorical_accuracy(y_true, y_pred, k=3)
 
 
-def load_quickdraw_images(quickdraw_images_path):
-    x = np.load(quickdraw_images_path) # load all images
+def load_quickdraw_images(quickdraw_images_path, max_images=100):
+    x = np.load(quickdraw_images_path)[:max_images] # load all images
     x = x.astype(np.float32) / 255. # scale images
     # reshape to 28x28x1 grayscale image
     x = x.reshape(x.shape[0], IMG_WIDTH, IMG_HEIGHT, IMG_DIM)
@@ -86,6 +86,8 @@ def main():
     model_abs_path = os.path.join(cur_dir_path, model_rel_path)
     labels_abs_path = os.path.join(cur_dir_path, labels_rel_path)
     rec_obj = Recognize(model_abs_path, labels_abs_path)
+    # random_object = rec_obj.get_random_object()
+    # print(random_object)
     test_prediction(rec_obj)
 
 
