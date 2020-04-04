@@ -45,6 +45,11 @@ class Recognize():
         arg_max = np.argmax(predictions)
         return self.labels_to_objects[arg_max], predictions[arg_max]
 
+    def get_random_object(self):
+        random_label = random.randint(0, len(self.labels_to_objects))
+        random_object = self.labels_to_objects[random_label]
+        return random_object
+
 
 def top_3_acc(y_true, y_pred):
     return metrics.top_k_categorical_accuracy(y_true, y_pred, k=3)
