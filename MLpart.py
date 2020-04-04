@@ -79,15 +79,20 @@ def test_prediction(rec_obj):
     print("max label: %s. prediction: %s" % (max_label, max_prediction))
 
 
-def main():
+def get_default_model():
     cur_dir_path = pathlib.Path().absolute()
     model_rel_path = "models/20/10000/model.h5"
     labels_rel_path = "models/20/10000/labels.csv"
     model_abs_path = os.path.join(cur_dir_path, model_rel_path)
     labels_abs_path = os.path.join(cur_dir_path, labels_rel_path)
     rec_obj = Recognize(model_abs_path, labels_abs_path)
-    # random_object = rec_obj.get_random_object()
-    # print(random_object)
+    return rec_obj
+
+
+def main():
+    rec_obj = get_default_model()
+    random_object = rec_obj.get_random_object()
+    print(random_object)
     test_prediction(rec_obj)
 
 
