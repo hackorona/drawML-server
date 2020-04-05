@@ -8,6 +8,7 @@ from tensorflow.keras.models import load_model
 from keras import metrics
 import csv
 import random
+from skimage import img_as_bool
 
 
 IMG_WIDTH = 28
@@ -41,19 +42,27 @@ class Recognize():
     @staticmethod
     def fit_image_to_prediction_dim(x):
         if x.shape[0] != IMG_WIDTH or x.shape[1] != IMG_HEIGHT:
-            plt.imshow(x, cmap="gray")
-            plt.show()
+            # plt.imshow(x, cmap="gray")
+            # plt.show()
+            # x = resize(x, (IMG_WIDTH, IMG_HEIGHT))
+            # plt.imshow(x, cmap="gray")
+            # plt.show()
+
             x = resize(x, (IMG_WIDTH, IMG_HEIGHT))
+            # x[x > 0.4 & x < 0.9] += 0.1
             plt.imshow(x, cmap="gray")
             plt.show()
+
             # TODO check other ways to resize, like:
             # large image is shape (1, 128, 128)
             # small image is shape (1, 64, 64)
-            # input_size = 128
-            # output_size = 64
+            # input_size = x.shape[0]
+            # output_size = IMG_WIDTH
             # bin_size = input_size // output_size
-            # small_image = large_image.reshape((1, output_size, bin_size,
+            # new_x = x.reshape((1, output_size, bin_size,
             #                                    output_size, bin_size)).max(4).max(2)
+            # plt.imshow(new_x, cmap="gray")
+            # plt.show()
         x = x.reshape(IMG_WIDTH, IMG_HEIGHT, PIXEL_DIM)
         x = np.array([x, ])
         return x
@@ -68,7 +77,7 @@ class Recognize():
 
     def classify_specific_definition(self, x, specific_definition):
         label_prediction = self.predict_specific_label(x, self.definitions_to_labels[specific_definition])
-        print(label_prediction)
+        print("is it %s? %s" % (specific_definition, label_prediction))
         return label_prediction >= CLASSIFICATION_TH
 
     def predict_max_label(self, x):
@@ -77,6 +86,7 @@ class Recognize():
         return self.labels_to_definitions[arg_max], predictions[arg_max]
 
     def get_random_definition(self):
+        # return "banana"
         random_label = random.randint(0, len(self.labels_to_definitions)-1)
         random_definition = self.labels_to_definitions[random_label]
         return random_definition
@@ -115,6 +125,8 @@ def test_prediction(rec_obj):
     print("banana prediction: %s" % (banana_prediction))
     max_label, max_prediction = rec_obj.predict_max_label(banana)
     print("max label: %s. prediction: %s" % (max_label, max_prediction))
+    classify_specific_definition = rec_obj.classify_specific_definition(banana, "banana")
+    print(classify_specific_definition)
 
 
 def get_default_model():

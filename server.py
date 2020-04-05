@@ -33,11 +33,13 @@ def find_room(room_name):
 
 
 def create_matrix(draw_object):
-    size = (draw_object['width'], draw_object['width'])
+    size = (draw_object['width'], draw_object['height'])
     matrix = np.zeros(size)
     for line in draw_object['lines']:
         for point in line['points']:
-            matrix[int(round(point['x'])), int(round(point['y']))] = 1
+            for i in range(-8,9):
+                for j in range(-8,9):
+                    matrix[int(i+(point['y'])), int(j+(point['x']))] = 1
     return matrix
 
 
