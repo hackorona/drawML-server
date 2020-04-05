@@ -43,15 +43,15 @@ class Recognize():
         if x.shape[0] != IMG_WIDTH or x.shape[1] != IMG_HEIGHT:
             # plt.imshow(x, cmap="gray")
             # plt.show()
-            # x = resize(x, (IMG_WIDTH, IMG_HEIGHT))
-            # plt.imshow(x, cmap="gray")
-            # plt.show()
+            # plt.savefig('before.png')
 
             x = resize(x, (IMG_WIDTH, IMG_HEIGHT))
             x[x > 0.1] *= 1.5
             x[x > 1] = 1
             # plt.imshow(x, cmap="gray")
+            # plt.savefig('after.png')
             # plt.show()
+
 
             # TODO check other ways to resize, like:
             # large image is shape (1, 128, 128)
