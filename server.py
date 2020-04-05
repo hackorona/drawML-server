@@ -37,8 +37,8 @@ def create_matrix(draw_object):
     matrix = np.zeros(size)
     for line in draw_object['lines']:
         for point in line['points']:
-            for i in range(-8,9):
-                for j in range(-8,9):
+            for i in range(-6,7):
+                for j in range(-6,7):
                     matrix[int(i+(point['y'])), int(j+(point['x']))] = 1
     return matrix
 

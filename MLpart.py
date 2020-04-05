@@ -49,7 +49,8 @@ class Recognize():
             # plt.show()
 
             x = resize(x, (IMG_WIDTH, IMG_HEIGHT))
-            # x[x > 0.4 & x < 0.9] += 0.1
+            x[x > 0.1] *= 1.5
+            x[x > 1] = 1
             plt.imshow(x, cmap="gray")
             plt.show()
 
@@ -130,13 +131,23 @@ def test_prediction(rec_obj):
 
 
 def get_default_model():
-    return get_20_10000()
+    return get_20_10000_model()
 
 
-def get_20_10000():
+def get_20_10000_model():
     cur_dir_path = pathlib.Path().absolute()
     model_rel_path = "models/20/10000/model.h5"
     labels_rel_path = "models/20/10000/labels.csv"
+    model_abs_path = os.path.join(cur_dir_path, model_rel_path)
+    labels_abs_path = os.path.join(cur_dir_path, labels_rel_path)
+    rec_obj = Recognize(model_abs_path, labels_abs_path)
+    return rec_obj
+
+
+def get_345_5000_model():
+    cur_dir_path = pathlib.Path().absolute()
+    model_rel_path = "models/345/5000/model.h5"
+    labels_rel_path = "models/345/5000/labels.csv"
     model_abs_path = os.path.join(cur_dir_path, model_rel_path)
     labels_abs_path = os.path.join(cur_dir_path, labels_rel_path)
     rec_obj = Recognize(model_abs_path, labels_abs_path)
