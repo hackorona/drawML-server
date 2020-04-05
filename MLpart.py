@@ -63,7 +63,7 @@ class Recognize():
         return self.predict(x)[specific_label]
 
     def classify_specific_definition(self, x, specific_definition):
-        label_prediction = self.predict_specific_label(self.definitions_to_labels[specific_definition])
+        label_prediction = self.predict_specific_label(x, self.definitions_to_labels[specific_definition])
         return label_prediction >= CLASSIFICATION_TH
 
     def predict_max_label(self, x):
