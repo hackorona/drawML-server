@@ -4,10 +4,10 @@ from tensorflow.keras.models import load_model
 from keras import metrics
 import csv
 import random
+import pathlib
+import os
 # from PIL import Image
 # import matplotlib.pyplot as plt
-# import pathlib
-# import os
 
 
 IMG_WIDTH = 28
@@ -96,6 +96,30 @@ def top_3_acc(y_true, y_pred):
     return metrics.top_k_categorical_accuracy(y_true, y_pred, k=3)
 
 
+def get_default_model():
+    return get_20_10000_model()
+
+
+def get_20_10000_model():
+    cur_dir_path = pathlib.Path().absolute()
+    model_rel_path = "models/20/10000/model.h5"
+    labels_rel_path = "models/20/10000/labels.csv"
+    model_abs_path = os.path.join(cur_dir_path, model_rel_path)
+    labels_abs_path = os.path.join(cur_dir_path, labels_rel_path)
+    rec_obj = Recognize(model_abs_path, labels_abs_path)
+    return rec_obj
+
+
+def get_345_5000_model():
+    cur_dir_path = pathlib.Path().absolute()
+    model_rel_path = "models/345/5000/model.h5"
+    labels_rel_path = "models/345/5000/labels.csv"
+    model_abs_path = os.path.join(cur_dir_path, model_rel_path)
+    labels_abs_path = os.path.join(cur_dir_path, labels_rel_path)
+    rec_obj = Recognize(model_abs_path, labels_abs_path)
+    return rec_obj
+
+
 # def load_quickdraw_images(quickdraw_images_path, max_images=100):
 #     x = np.load(quickdraw_images_path)[:max_images] # load all images
 #     x = x.astype(np.float32) / 255. # scale images
@@ -127,30 +151,6 @@ def top_3_acc(y_true, y_pred):
 #     print("max label: %s. prediction: %s" % (max_label, max_prediction))
 #     classify_specific_definition = rec_obj.classify_specific_definition(banana, "banana")
 #     print(classify_specific_definition)
-#
-#
-# def get_default_model():
-#     return get_20_10000_model()
-#
-#
-# def get_20_10000_model():
-#     cur_dir_path = pathlib.Path().absolute()
-#     model_rel_path = "models/20/10000/model.h5"
-#     labels_rel_path = "models/20/10000/labels.csv"
-#     model_abs_path = os.path.join(cur_dir_path, model_rel_path)
-#     labels_abs_path = os.path.join(cur_dir_path, labels_rel_path)
-#     rec_obj = Recognize(model_abs_path, labels_abs_path)
-#     return rec_obj
-#
-#
-# def get_345_5000_model():
-#     cur_dir_path = pathlib.Path().absolute()
-#     model_rel_path = "models/345/5000/model.h5"
-#     labels_rel_path = "models/345/5000/labels.csv"
-#     model_abs_path = os.path.join(cur_dir_path, model_rel_path)
-#     labels_abs_path = os.path.join(cur_dir_path, labels_rel_path)
-#     rec_obj = Recognize(model_abs_path, labels_abs_path)
-#     return rec_obj
 #
 #
 # def main():
