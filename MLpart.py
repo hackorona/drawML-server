@@ -4,7 +4,7 @@ from PIL import Image
 import matplotlib.pyplot as plt
 import pathlib
 import os
-from keras.models import load_model
+from tensorflow.keras.models import load_model
 from keras import metrics
 import csv
 import random
@@ -41,7 +41,11 @@ class Recognize():
     @staticmethod
     def fit_image_to_prediction_dim(x):
         if x.shape[0] != IMG_WIDTH or x.shape[1] != IMG_HEIGHT:
+            plt.imshow(x, cmap="gray")
+            plt.show()
             x = resize(x, (IMG_WIDTH, IMG_HEIGHT))
+            plt.imshow(x, cmap="gray")
+            plt.show()
             # TODO check other ways to resize, like:
             # large image is shape (1, 128, 128)
             # small image is shape (1, 64, 64)
@@ -64,6 +68,7 @@ class Recognize():
 
     def classify_specific_definition(self, x, specific_definition):
         label_prediction = self.predict_specific_label(x, self.definitions_to_labels[specific_definition])
+        print(label_prediction)
         return label_prediction >= CLASSIFICATION_TH
 
     def predict_max_label(self, x):
@@ -72,7 +77,7 @@ class Recognize():
         return self.labels_to_definitions[arg_max], predictions[arg_max]
 
     def get_random_definition(self):
-        random_label = random.randint(0, len(self.labels_to_definitions))
+        random_label = random.randint(0, len(self.labels_to_definitions)-1)
         random_definition = self.labels_to_definitions[random_label]
         return random_definition
 
