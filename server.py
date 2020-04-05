@@ -42,7 +42,7 @@ def create_matrix(draw_object):
 
 
 def get_random_def():
-    definition = ml_module.get_random_object()
+    definition = ml_module.get_random_definition()
     return definition
 
 
@@ -105,8 +105,8 @@ def identify_image(data):
         return '-1'
 
     generated_matrix = create_matrix(draw_object)
-    # success = ml_module.predict(generated_matrix, room_map[room_name]['definition'])
-    success = True
+    success = ml_module.classify_specific_definition(generated_matrix, room_map[room_name]['definition'])
+    # success = True
     if success:  # Announce game over
         data = {WINNER: user_name}
         emit(GAME_OVER, data, room=room_name)
