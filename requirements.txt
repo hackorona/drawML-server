@@ -8,7 +8,7 @@ python-engineio==3.12.1
 python-socketio==4.5.1
 six==1.14.0
 Werkzeug==1.0.1
-tensorflow==2.0.0
+tensorflow==2.5.1
 Keras==2.3.1
 matplotlib==3.2.1
 numpy==1.18.2
